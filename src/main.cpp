@@ -30,8 +30,6 @@ void setup() {
 
   pinMode(JS1_PIN_X, INPUT);
   pinMode(JS1_PIN_Y, INPUT);
-  
-  digitalWrite(SW3_PIN_A, 1);
 }
 
 void loop() {
@@ -48,11 +46,13 @@ void loop() {
 
 void digitalSignalTerminal (uint8_t pina, uint8_t pinb, uint8_t number, bool end) {
   int8_t stat = -1;
-  if (digitalRead(pina) && digitalRead(pinb)) {
+  bool a = digitalRead(pina);
+  bool b = digitalRead(pinb);
+  if (a && b) {
     stat = 0;
-  } else if (!digitalRead(pina) && digitalRead(pinb)) {
+  } else if (!a && b) {
     stat = 1;
-  } else if (digitalRead(pina) && !digitalRead(pinb)) {
+  } else if (a && !b) {
     stat = 2;
   }
   SerialBT.print(String("SW") + String(number) + ":" + String(stat));
@@ -69,8 +69,8 @@ void digitalSignalTerminal (uint8_t pina, uint8_t pinb, uint8_t number, bool end
 void analogSignalTerminal (uint8_t pin, char number, bool end) {
   int8_t stat = -1;
   uint16_t val = analogRead(pin);
-  if (val > 800) stat = 1;
-  else if (val < 300) stat = 2;
+  if (val > 4000) stat = 1;
+  else if (val < 100) stat = 2;
   else stat = 0;
   SerialBT.print(String("JS") + String(number) + ":" + String(stat));
   if (end) SerialBT.println();
